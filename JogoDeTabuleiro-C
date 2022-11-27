@@ -1,0 +1,235 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <windows.h>
+#include <locale.h>
+
+void mudarCor(int n1){
+	HANDLE h= GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(h,n1);
+}
+
+int main(void) {
+	setlocale(LC_ALL, "Portuguese");
+	srand(time(NULL));
+	char nomedojogador1[30], nomedojogador2[30];
+
+	printf("Ludo da matemática\n\n");
+
+	//Declarar começo dos jogadores
+  	printf("\nDigite o nome do jogador 1: \n");
+  	scanf("%s", nomedojogador1);
+  	
+  	printf("\nDigite o nome do jogador 2: \n");
+  	scanf("%s", nomedojogador2);
+  	system("cls");
+
+  	char cam[30], p1[30], p2[30];
+  	int x, aux=0, contador = 0, teste1 = 0, teste2 = 0, pos1 = 0, pos2 = 0, dado, n1, n2, n3, n4, resposta;
+  	//Limpar os vetores
+  	for (int l = 0; l < 30; l++) {
+    	cam[l] = ' ';
+    	p1[l] = ' ';
+    	p2[l] = ' ';
+  	}
+  	
+  	p1[0] = '1';
+  	p2[0] = '2';
+
+  	//Criar Bombas
+  	for (int u = 0; u < 3 ; u++) {
+    x = 1 + rand() % 28;
+    	if (cam[x] != '@') {
+      	cam[x] = '@';
+  		}else {
+      	u--;
+    	}
+  	}
+
+  	//Declarar começo e fim
+  	cam[0] = 'X';
+  	cam[29] = 'Y';
+
+  	//Verificar Bomba
+  	for (int j = 1; j < 29; j++) {
+    	if (cam[j] != '@') {
+      	cam[j] = '_';
+    	}
+  	}
+  	
+  	printf("Ludo da matemática\n\n\n");
+  	//Mostrar Mapa
+  	for (int i = 0; i < 30; i++) {
+    	printf("%c ", cam[i]);
+  	}
+  	//Mostrar caminho jogador 1    
+  	printf("\n");
+  	for (int i = 0; i < 30; i++) {
+  		mudarCor(9);
+    	printf("%c ", p1[i]);
+  	}
+  	//Mostrar caminho jogador 2
+  	printf("\n");
+  	for (int i = 0; i < 30; i++) {
+  		mudarCor(4);
+    	printf("%c ", p2[i]);
+  	}
+  	mudarCor(7);
+  	
+  	printf("\n\n\nJOGADORES:\n1 - %s\n2 - %s\n", nomedojogador1, nomedojogador2);
+  	printf("\n\n\tPRESSIONE QUALQUER TECLA PARA INICIAR O JOGO!\n\n\n\n\n\n\n");
+  	system("pause");
+  	system("cls");
+  
+	while(teste1 == 0 && teste2 == 0) {
+  	//sorteio do valor do dado
+    dado = 1 + rand() % 6;
+    
+    //sorteio dos números que serão calculados
+	  n1 = 1 + rand() % 10;
+    n2 = 1 + rand() % 10;
+    n3 = 1 + rand() % 10;
+    n4 = 1 + rand() % 10;
+
+    if (contador % 2 == 0) { //Jogador 1
+	do{
+
+    	printf("Ludo da matemática\n\n\n");
+    	for (int i = 0; i < 30; i++) { //Mostra o tabuleiro
+    		printf("%c ", cam[i]);
+      	}
+      	printf("\n");
+      	for (int i = 0; i < 30; i++) { //Mostra o caminho do jogador 1
+      		mudarCor(9);
+        	printf("%c ", p1[i]);
+      	}
+      	printf("\n");
+      	for (int i = 0; i < 30; i++) { //Mostra o caminho do jogador 2
+      		mudarCor(4);
+        	printf("%c ", p2[i]);
+      	}
+    	mudarCor(7);
+    	printf("\n\nVEZ DO JOGADOR 1 - %s\n\n", nomedojogador1);
+    	printf("Valor do dado: %d\n\n", dado);
+    	printf("Responda: (%d+%d)*(%d-%d) \n", n1, n2, n3, n4);
+    	aux = scanf("%d", & resposta);
+    	getchar();
+    	system("cls");
+	}while(aux==0); //código não continua caso o usuário digite uma letra
+
+
+    if (resposta == (n1 + n2) * (n3 - n4)){ //Se a resposta for certa...
+    	pos1 += dado; //Jogador avança o quanto tirou no dado
+        
+        for (int i = 0; i < 30; i++) {
+        	if (cam[pos1] == '@') { //Se o jogador cair em uma bomba, volta 5 casas
+            	pos1 -= 5;
+        	}
+          	if (pos1 <= 0) { //Jogador não passa da primeira posição do tabuleiro
+            	pos1 = 0;
+          	} else if (pos1 >= 29) { //Jogador não passa da última posição do tabuleiro
+            	pos1 = 29;
+            	teste1++;
+          	}
+
+          	if (i == pos1) { //Define a posição atual do jogador
+            	p1[pos1] = '1';
+          	}else { //Define as casas vazias
+            	p1[i] = ' ';
+          	}
+        }
+        printf("\n");
+    }
+    	contador++;
+    	system("cls");
+
+    }else{ //Jogador 2
+    	do{
+		  
+      	printf("Ludo da matemática\n\n\n");
+      	for (int i = 0; i < 30; i++) {
+        	printf("%c ", cam[i]);
+      	}
+      	printf("\n");
+      	for (int i = 0; i < 30; i++) {
+      		mudarCor(9);
+        	printf("%c ", p1[i]);
+      	}
+      	printf("\n");
+      	for (int i = 0; i < 30; i++) {
+      		mudarCor(4);
+        	printf("%c ", p2[i]);
+      	}
+      	mudarCor(7);
+      
+      	printf("\n\nVEZ DO JOGADOR 2 - %s\n\n", nomedojogador2);
+      	printf("Valor do dado: %d\n\n", dado);
+      	printf("Responda: (%d+%d)*(%d-%d) \n", n1, n2, n3, n4);
+      	aux = scanf("%d", & resposta);
+      	getchar();
+      	system("cls");
+		}while(aux==0);//Programa não continua caso usuário digite uma letra
+	
+    	if (resposta == (n1 + n2) * (n3 - n4)) { //Se a resposta for certa...
+        pos2 += dado; //Jogador avança o quanto tirou no dado
+        for (int i = 0; i < 30; i++) {
+        	if (cam[pos2] == '@') { //Se o jogador cair em uma bomba, volta 5 casas
+        		pos2 -= 5;
+    		}
+    		if (pos2 <= 0) { //Jogador não passa da primeira posição do tabuleiro
+    			pos2 = 0;
+    		}else if (pos2 >= 29) { //Jogador não passa da última posição do tabuleiro
+    			pos2 = 29;
+        		teste2++;
+    		}
+    		if (i == pos2) { //Define a posição atual do jogador
+    			p2[pos2] = '2';
+        	}else { //Define as casas vazias 
+        	p2[i] = ' ';
+    		}
+    	}
+    	}
+    	contador++;
+    	system("cls");
+    } 
+	}
+
+  	if (teste1 > teste2) { //Jogador 1 vence
+  	printf("FIM DE JOGO!\n\n\n");
+    	for (int i = 0; i < 30; i++) { //Mostra o tabuleiro
+      		printf("%c ", cam[i]);
+    	}
+    printf("\n");
+    	for (int i = 0; i < 30; i++) { //Mostra o caminho do jogador 1
+    		mudarCor(9);
+    		printf("%c ", p1[i]);
+    	}
+    printf("\n");
+    	for (int i = 0; i < 30; i++) { //Mostra o caminho do jogador 2
+    		mudarCor(4);
+    		printf("%c ", p2[i]);
+    	}
+    mudarCor(7);
+    printf("\n\nO vencedor foi: %s", nomedojogador1);
+
+    }else if (teste2 > teste1) { //Jogador 2 vence
+    	printf("FIM DE JOGO!\n\n\n");
+    	for (int i = 0; i < 30; i++) { //Mostra o tabuleiro
+      		printf("%c ", cam[i]);
+    	}
+    printf("\n");
+    	for (int i = 0; i < 30; i++) { //Mostra o caminho do jogador 1
+    		mudarCor(9);
+      	printf("%c ", p1[i]);
+    	}
+    printf("\n");
+    	for (int i = 0; i < 30; i++) { //Mostra o caminho do jogador 2
+    		mudarCor(4);
+      		printf("%c ", p2[i]);
+    	}
+    mudarCor(7);
+    printf("\n\nO vencedor foi: %s", nomedojogador2);
+  }
+  printf("\n\n\n");
+  system("pause");
+}
